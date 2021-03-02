@@ -352,7 +352,6 @@
                 "std", "small"
             ]
         },
-        "c_lib": "small",
         "supported_application_profiles": [
             "full", "bare-metal"
         ]
@@ -4380,7 +4379,6 @@
                 "std", "small"
             ]
         },
-        "c_lib": "small",
         "supported_application_profiles": [
             "full", "bare-metal"
         ]
@@ -4446,7 +4444,6 @@
                 "std", "small"
             ]
         },
-        "c_lib": "small",
         "supported_application_profiles": [
             "full", "bare-metal"
         ]
