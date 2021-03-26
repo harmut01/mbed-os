@@ -145,20 +145,30 @@ target_link_libraries(mbed-core INTERFACE ${MBED_TARGET_CONVERTED})
 function(mbed_generate_bin_hex target)
     get_property(elf_to_bin GLOBAL PROPERTY ELF2BIN)
     if(MBED_TOOLCHAIN STREQUAL "GCC_ARM")
-        set(CMAKE_POST_BUILD_COMMAND
-            COMMAND ${elf_to_bin} -O binary $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin
-            COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin"
-            COMMAND ${elf_to_bin} -O ihex $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex
-            COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex"
-        )
+        if (MBED_OUTPUT_EXT STREQUAL "bin")
+            set(CMAKE_POST_BUILD_COMMAND
+                COMMAND ${elf_to_bin} -O binary $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin
+                COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin"
+            )
+        elseif (MBED_OUTPUT_EXT STREQUAL "hex")    
+            set(CMAKE_POST_BUILD_COMMAND
+                    COMMAND ${elf_to_bin} -O ihex $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex
+                    COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex"
+            )
+        endif()
     elseif(MBED_TOOLCHAIN STREQUAL "ARM")
         get_property(mbed_studio_arm_compiler GLOBAL PROPERTY MBED_STUDIO_ARM_COMPILER)
-        set(CMAKE_POST_BUILD_COMMAND
-            COMMAND ${elf_to_bin} ${mbed_studio_arm_compiler} --bin  -o ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin $<TARGET_FILE:${target}>
-            COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin"
-            COMMAND ${elf_to_bin} ${mbed_studio_arm_compiler} --i32combined  -o ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex $<TARGET_FILE:${target}>
-            COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex"
-        )
+        if (MBED_OUTPUT_EXT STREQUAL "bin")
+            set(CMAKE_POST_BUILD_COMMAND
+                    COMMAND ${elf_to_bin} ${mbed_studio_arm_compiler} --bin  -o ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin $<TARGET_FILE:${target}>
+                    COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.bin"
+                )
+        elseif (MBED_OUTPUT_EXT STREQUAL "hex")
+            set(CMAKE_POST_BUILD_COMMAND
+                COMMAND ${elf_to_bin} ${mbed_studio_arm_compiler} --i32combined  -o ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex $<TARGET_FILE:${target}>
+                COMMAND ${CMAKE_COMMAND} -E echo "-- built: ${CMAKE_CURRENT_BINARY_DIR}/${target}.hex"
+            )
+        endif()
     endif()
     add_custom_command(
         TARGET
