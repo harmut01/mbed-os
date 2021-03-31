@@ -4320,7 +4320,6 @@
         "core": "Cortex-M4F",
         "supported_toolchains": [
             "ARM",
-            "IAR",
             "GCC_ARM"
         ],
         "extra_labels": [
@@ -4387,7 +4386,6 @@
         "core": "Cortex-M4F",
         "supported_toolchains": [
             "ARM",
-            "IAR",
             "GCC_ARM"
         ],
         "extra_labels": [
